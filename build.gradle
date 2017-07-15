@@ -1,0 +1,42 @@
+group 'ys'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'io.undertow:undertow-core:1.4.18.Final',
+            'io.undertow:undertow-servlet:1.4.18.Final',
+            'org.springframework:spring-context:4.3.9.RELEASE',
+            'org.springframework:spring-webmvc:4.3.9.RELEASE',
+            'com.fasterxml.jackson.core:jackson-databind:2.8.9',
+            'org.slf4j:slf4j-api:1.7.+'
+    runtime 'ch.qos.logback:logback-classic:1.1.+'
+    // testCompile 'org.codehaus.groovy:groovy-all:2.4.+',
+    //         'org.springframework:spring-test:4.3.9.RELEASE',
+    //         'org.spockframework:spock-core:1.0-groovy-2.4',
+    //         'org.spockframework:spock-spring:1.0-groovy-2.4'
+}
+
+mainClassName = 'ys.undertow.UndertowMain'
+
+task fatJar(type: Jar, dependsOn: ['compileJava', 'processResources']) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from configurations.runtime.asFileTree.files.collect { it.isDirectory() ? it : zipTree(it) }
+    exclude 'META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA'
+
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}

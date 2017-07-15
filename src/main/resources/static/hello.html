@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REST Spring Undertow</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        $(function () {
+            $('#the-form').submit(function (evt) {
+                evt.preventDefault();
+                var name = $('#the-form [name="name"]').val().trim();
+                $.getJSON('../sayHello', {name: name})
+                    .done(function (response) {
+                        console.log(response);
+                        alert(response.message);
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+<form id="the-form">
+    <label>
+        Name:
+        <input type="text" name="name">
+    </label>
+    <button type="submit">Say hello!</button>
+</form>
+</body>
+</html>
